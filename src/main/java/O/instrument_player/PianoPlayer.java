@@ -1,4 +1,4 @@
-package O;
+package O.instrument_player;
 
 public class PianoPlayer implements InstrumentPlayer {
 
