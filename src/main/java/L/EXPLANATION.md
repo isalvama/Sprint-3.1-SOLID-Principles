@@ -6,12 +6,12 @@ Case L illustrates a scenario where the **Liskov Substitution Principle (DIP)** 
 
 ## 1. The Core Issue: What was wrong?
 
-The primary architectural errors were concentrated in the `java.Character` super class.
+The primary architectural errors were concentrated in the `Character` super class.
 
-Specifically, the `java.Character` super-class holded the `takeDamage()` method that could only be implemented by `java.Warrior` class but not by `java.Ghost` class:
+Specifically, the `Character` super-class holded the `takeDamage()` method that could only be implemented by `Warrior` class but not by `Ghost` class:
 
 ```java
-public class java.Character {
+public class Character {
     public void attack() {
         System.out.println("The character attacks with a weapon.");
     }
@@ -22,11 +22,9 @@ public class java.Character {
 }
 ```
 
-Consequently, the `java.Ghost` class, which inherits from `java.Character`, was forced to implement `takeDamage()` method even though ghosts are conceptually immune to physical damage. This led to a "hack" implementation:
+Consequently, the `Ghost` class, which inherits from `Character`, was forced to implement `takeDamage()` method even though ghosts are conceptually immune to physical damage. This led to a "hack" implementation:
 
 ```java
-import java.Character;
-
 public class Ghost extends Character {
     @Override
     public void attack() {
@@ -43,9 +41,9 @@ public class Ghost extends Character {
 
 ## 2. Why does it violate the principle? 🚩
 
-The inheritance design of the mentioned classes break the **Liskov Substitution Principle (DIP)** because the sub-class `java.Ghost` can not properly substitute it parent `java.Character` class, as long as it can not implement `takeDamage()` action.
+The inheritance design of the mentioned classes break the **Liskov Substitution Principle (DIP)** because the sub-class `Ghost` can not properly substitute it parent `Character` class, as long as it can not implement `takeDamage()` action.
 
-According to LSP, a program should be able to use any subclass in place of its parent class without knowing the difference and without the program crashing. In this case, if a developer treats `java.Ghost` as a `java.Character` and calls `takeDamage()` the program brakes as the class does not allow taking damage.
+According to LSP, a program should be able to use any subclass in place of its parent class without knowing the difference and without the program crashing. In this case, if a developer treats `Ghost` as a `Character` and calls `takeDamage()` the program brakes as the class does not allow taking damage.
 
 The subclass **weakens** the contract established by the superclass.
 
@@ -55,48 +53,44 @@ The subclass **weakens** the contract established by the superclass.
 
 The refactoring focuses on decoupling the damage logic from the inheritance tree by using the **Strategy Pattern, introducing an abstraction layer. Here is the breakdown of the changes:
 
-1.  **Creation of the `java.Damage` Interface**:
-    We defined a `java.Damage` interface with an abstract `takeDamage()` method to act as an abstraction. This allows us to define different implementations that act as different "behaviors" depending on the type of `java.Character` subclass.
+1.  **Creation of the `Damage` Interface**:
+    We defined a `Damage` interface with an abstract `takeDamage()` method to act as an abstraction. This allows us to define different implementations that act as different "behaviors" depending on the type of `Character` subclass.
 
 ```java
-public interface java.Damage {
+public interface Damage {
     public void takeDamage(int points);
 }
 ```
 
 2.  **Defining java.Damage Strategies**
-    We created two concrete strategies: `java.NotPermittedDamageTakingProcedure` and `java.PermittedDamageTakingProcedure`**:
-    We defined permitted and not permitted damage strategies through both mentioned classes (that implement `java.Damage` interface) by defining the logic of `takeDamage()` method. The `java.PermittedDamageTakingProcedure` works for characters that take damage and `java.NotPermittedDamageTakingProcedure` work as a "Null Object" or "Immunity" strategy
+    We created two concrete strategies: `NotPermittedDamageTakingStrategy` and `PermittedDamageTakingProcedure`**:
+    We defined permitted and not permitted damage strategies through both mentioned classes (that implement `Damage` interface) by defining the logic of `takeDamage()` method. The `PermittedDamageTakingProcedure` works for characters that take damage and `NotPermittedDamageTakingProcedure` work as a "Null Object" or "Immunity" strategy
 
 ```java
-import java.Damage;
-
-public class PermittedDamageTakingProcedure implements Damage {
+public class PermittedDamageTakingStrategy implements Damage {
     private final String characterClassName;
-    private final int damageReductionFactor;
+    private final int damageResistanceFactor;
 
-    public java.PermittedDamageTakingProcedure(String characterClassName, int damageReductionFactor) {
-        this.characterClassName = characterClassName;
-        this.damageReductionFactor = damageReductionFactor;
+    public PermittedDamageTakingStrategy(String characterClassName, int damageResistanceFactor) {
+        if (damageResistanceFactor < 1) throw new IllegalArgumentException("damageReductionFactor can not be less than 1");
+        this.characterClassName = Objects.requireNonNull(characterClassName, "characterClassName can not be null");
+        this.damageResistanceFactor = damageResistanceFactor;
     }
 
     @Override
     public void takeDamage(int points) {
-        System.out.println("The " + characterClassName + " resists and only takes " + (points / damageReductionFactor) + " points of damage.");
+        System.out.println("The " + characterClassName  + " resists and only takes " + (points / damageResistanceFactor) + " points of damage.");
     }
 }
 ```
 
 ```java
-import java.Damage;
-
-public class NotPermittedDamageTakingProcedure implements Damage {
+public class NotPermittedDamageTakingStrategy implements Damage {
     private final String characterClassName;
 
-    public java.NotPermittedDamageTakingProcedure(String characterClassName) {
-        this.characterClassName = characterClassName;
+    public NotPermittedDamageTakingStrategy(String characterClassName) {
+        this.characterClassName = Objects.requireNonNull(characterClassName, "characterClassName can not be null");
     }
-
     @Override
     public void takeDamage(int points) {
         System.out.println("A " + characterClassName + " cannot take physical damage!");
@@ -105,34 +99,33 @@ public class NotPermittedDamageTakingProcedure implements Damage {
 ```
 
 
-3. **Refactoring the `java.Character` Base Class**:
+3. **Refactoring the `Character` Base Class**:
 
    We removed the hardcoded damage logic and replaced it with **Dependency Injection**. 
 
-   We added a `java.Damage` type attribute to the `java.Character` super-class (`damageTakingProcedure`) so the class holds a reference to `java.Damage` strategy. This strategy is instantiated by passing any class that implements it as a parameter in the constructor.
+   We added a `Damage` type attribute to the `Character` super-class (`damageTakingStrategy`) so the class holds a reference to `Damage` strategy. This strategy is instantiated by passing any class that implements it as a parameter in the constructor.
 
-    The `java.Character` class now implements the `Database` interface. It is no longer a "standalone" dependency but one of many possible implementations of the abstraction.
+    The `Character` class now implements the `Database` interface. It is no longer a "standalone" dependency but one of many possible implementations of the abstraction.
 
 ```java
-import java.Damage;
-
 public class Character {
     private final String characterName;
     private final int attackStrengthInPoints;
-    private final Damage damageTakingProcedure;
+    private final Damage damageTakingStrategy;
 
-    public java.Character(String characterName, int attackStrengthPoints, Damage damageTakingProcedure) {
-        this.characterName = characterName;
+    public Character (String characterName, int attackStrengthPoints, Damage damageTakingProcedure) {
+        if (attackStrengthPoints < 0) throw new IllegalArgumentException("attackStrengthPoints can not be negative");
+        this.characterName = Objects.requireNonNull(characterName, "characterName can not be null");
         this.attackStrengthInPoints = attackStrengthPoints;
-        this.damageTakingProcedure = damageTakingProcedure;
+        this.damageTakingStrategy = Objects.requireNonNull(damageTakingProcedure, "damageTakingProcedure can not be null");
     }
 
     public void attack() {
         System.out.println("The character attacks with a weapon of " + this.getAttackStrengthInPoints() + " points.");
     }
 
-    public void takeDamage(int points, int damageReductionFactor) {
-        damageTakingProcedure.takeDamage(points);
+    public void takeDamage (int points){
+        damageTakingStrategy.takeDamage(points);
     }
 
     public int getAttackStrengthInPoints() {
@@ -142,17 +135,14 @@ public class Character {
 ```
 
 4.  **Specific Implementations**:
-    `java.Warrior` and `java.Ghost` in `java.Character` now provide their specific strategy to the super constructor.
-    * **java.Warrior**: Receives the `java.PermittedDamageTakingProcedure`.
-    * **java.Ghost**: Receives the `java.NotPermittedDamageTakingProcedure`.
+    `Warrior` and `Ghost` in `Character` now provide their specific strategy to the super constructor.
+    * **java.Warrior**: Receives the `PermittedDamageTakingStrategy`.
+    * **java.Ghost**: Receives the `NotPermittedDamageTakingStrategy`.
 
 ```java
-import java.Character;
-import java.NotPermittedDamageTakingProcedure;
-
 public class Ghost extends Character {
-    public java.Ghost(String characterName, int attackStrengthPoints) {
-        super(characterName, attackStrengthPoints, new NotPermittedDamageTakingProcedure(java.Ghost.class.getName()));
+    public Ghost (String characterName, int attackStrengthPoints){
+        super(characterName, attackStrengthPoints, new NotPermittedDamageTakingStrategy(Ghost.class.getSimpleName()));
     }
 
     @Override
@@ -163,13 +153,10 @@ public class Ghost extends Character {
 ```
 
 ```java
-import java.Character;
-import java.PermittedDamageTakingProcedure;
-
 public class Warrior extends Character {
 
-    public java.Warrior(String characterName, int attackStrengthPoints) {
-        super(characterName, attackStrengthPoints, new PermittedDamageTakingProcedure(java.Warrior.class.getName(), 2));
+    public Warrior(String characterName, int attackStrengthPoints) {
+        super(characterName, attackStrengthPoints, new PermittedDamageTakingStrategy(Warrior.class.getSimpleName(), 2));
     }
 
     @Override
@@ -180,5 +167,5 @@ public class Warrior extends Character {
 ```
 
 
-> **Why this is better?** By applying abstraction and the **Strategy Pattern** to make the program more flexible, subclasses now strictly follow the contract of the superclass. A `java.Ghost` is now a perfectly valid `java.Character` that can handle a `takeDamage()` call without crashing the system. We have achieved true **Substitutability**, making the system more robust, predictable, and easier to extend.
+> **Why this is better?** By applying abstraction and the **Strategy Pattern** to make the program more flexible, subclasses now strictly follow the contract of the superclass. A `Ghost` is now a perfectly valid `Character` that can handle a `takeDamage()` call without crashing the system. We have achieved true **Substitutability**, making the system more robust, predictable, and easier to extend.
 
