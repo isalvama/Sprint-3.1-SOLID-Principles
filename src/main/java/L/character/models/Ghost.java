@@ -11,5 +11,4 @@ public class Ghost extends Character {
     public void attack() {
         System.out.println("The ghost casts a spooky spell of " + this.getAttackStrengthInPoints() + " points.");
     }
-
 }

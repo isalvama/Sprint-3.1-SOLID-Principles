@@ -7,13 +7,13 @@ import java.util.Objects;
 public class Character {
     private final String characterName;
     private final int attackStrengthInPoints;
-    private final Damage damageTakingProcedure;
+    private final Damage damageTakingStrategy;
 
     public Character (String characterName, int attackStrengthPoints, Damage damageTakingProcedure) {
         if (attackStrengthPoints < 0) throw new IllegalArgumentException("attackStrengthPoints can not be negative");
         this.characterName = Objects.requireNonNull(characterName, "characterName can not be null");
         this.attackStrengthInPoints = attackStrengthPoints;
-        this.damageTakingProcedure = Objects.requireNonNull(damageTakingProcedure, "damageTakingProcedure can not be null");
+        this.damageTakingStrategy = Objects.requireNonNull(damageTakingProcedure, "damageTakingProcedure can not be null");
     }
 
     public void attack() {
@@ -21,7 +21,7 @@ public class Character {
     }
 
     public void takeDamage (int points){
-        damageTakingProcedure.takeDamage(points);
+        damageTakingStrategy.takeDamage(points);
     }
 
     public int getAttackStrengthInPoints() {
