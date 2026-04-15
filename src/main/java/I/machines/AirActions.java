@@ -1,4 +1,4 @@
-package I;
+package I.machines;
 
 public interface AirActions extends MachineActions {
     void heat();

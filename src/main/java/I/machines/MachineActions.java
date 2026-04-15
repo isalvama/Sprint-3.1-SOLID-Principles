@@ -1,4 +1,4 @@
-package I;
+package I.machines;
 
 public interface MachineActions {
     void turnOn();

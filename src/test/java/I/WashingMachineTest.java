@@ -1,5 +1,7 @@
 package I;
 
+import I.machines.WashingActions;
+import I.machines.WashingMachine;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

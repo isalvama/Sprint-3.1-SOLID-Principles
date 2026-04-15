@@ -1,4 +1,4 @@
-package I;
+package I.machines;
 
 public class WashingMachine implements WashingActions {
 
