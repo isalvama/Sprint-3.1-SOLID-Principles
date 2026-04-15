@@ -1,9 +1,11 @@
-package L;
+package L.character.models;
+
+import L.character.damage_strategy.PermittedDamageTakingStrategy;
 
 public class Warrior extends Character {
 
     public Warrior(String characterName, int attackStrengthPoints) {
-        super(characterName, attackStrengthPoints, new PermittedDamageTakingProcedure(Warrior.class.getName(), 2));
+        super(characterName, attackStrengthPoints, new PermittedDamageTakingStrategy(Warrior.class.getSimpleName(), 2));
     }
 
     @Override
