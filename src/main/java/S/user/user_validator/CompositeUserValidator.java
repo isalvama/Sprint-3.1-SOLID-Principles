@@ -1,4 +1,6 @@
-package S;
+package S.user.user_validator;
+
+import S.user.model.User;
 
 import java.util.List;
 import java.util.Objects;

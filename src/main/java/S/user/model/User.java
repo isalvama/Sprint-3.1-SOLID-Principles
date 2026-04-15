@@ -1,4 +1,4 @@
-package S;
+package S.user.model;
 
 public class User {private String name;
     private String email;

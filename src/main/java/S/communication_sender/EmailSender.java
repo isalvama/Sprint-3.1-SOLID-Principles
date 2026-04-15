@@ -1,5 +1,7 @@
-package S;
+package S.communication_sender;
 
+
+import S.user.model.User;
 
 public class EmailSender implements CommunicationSender {
 

@@ -1,4 +1,4 @@
-package S;
+package S.user.user_confirmation;
 public class UserConfirmationService {
 
     public void checkUserConfirmation() {

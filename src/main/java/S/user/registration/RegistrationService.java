@@ -1,4 +1,9 @@
-package S;
+package S.user.registration;
+import S.user.model.User;
+import S.communication_sender.CommunicationSender;
+import S.user.user_confirmation.UserConfirmationService;
+import S.user.user_validator.UserValidator;
+
 import java.util.Objects;
 
 public class RegistrationService {
@@ -19,7 +24,7 @@ public class RegistrationService {
             communicationSender.sendCommunicationToUser(user);
             userConfirmation.checkUserConfirmation();
         } catch (IllegalArgumentException e) {
-            System.err.println(e.getMessage());
+            throw new IllegalArgumentException("Error in registration process:" + e.getMessage(), e);
         }
     }
 }
