@@ -4,22 +4,22 @@ public class AirConditioner implements AirActions {
 
     @Override
     public void turnOn() {
-        System.out.println("java.AirConditioner is ON");
+        System.out.println("AirConditioner is ON");
     }
 
     @Override
     public void turnOff() {
-        System.out.println("java.AirConditioner is OFF");
+        System.out.println("AirConditioner is OFF");
     }
 
     @Override
     public void heat() {
-        System.out.println("java.AirConditioner is heating.");
+        System.out.println("AirConditioner is heating.");
     }
 
     @Override
     public void cool() {
-        System.out.println("java.AirConditioner is cooling.");
+        System.out.println("AirConditioner is cooling.");
     }
 
 }
