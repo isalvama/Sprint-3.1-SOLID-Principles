@@ -1,6 +1,6 @@
 package I;
 
-import I.machines.AirConditioner;
+import I.machine.models.AirConditioner;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,9 @@
 package O;
 
-import O.concert.ConcertService;
-import O.instrument_player.DrumsPlayer;
-import O.instrument_player.GuitarPlayer;
-import O.instrument_player.PianoPlayer;
+import O.concert_service.ConcertService;
+import O.instrument_player.models.DrumsPlayer;
+import O.instrument_player.models.GuitarPlayer;
+import O.instrument_player.models.PianoPlayer;
 import org.assertj.core.api.WithAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

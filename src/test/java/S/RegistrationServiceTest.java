@@ -1,7 +1,7 @@
 package S;
 
 import S.communication_sender.CommunicationSender;
-import S.communication_sender.EmailSender;
+import S.communication_sender.EmailSenderService;
 import S.user.registration.RegistrationService;
 import S.user.model.User;
 import S.user.user_confirmation.UserConfirmationService;
@@ -21,7 +21,7 @@ public class RegistrationServiceTest implements WithAssertions {
     private final EmailValidator emailValidator = new EmailValidator();
     private final PasswordValidator passwordValidator = new PasswordValidator();
     private final CompositeUserValidator compositeUserValidator = new CompositeUserValidator(List.of(emailValidator, passwordValidator));
-    private final CommunicationSender emailSender = new EmailSender();
+    private final CommunicationSender emailSender = new EmailSenderService();
     private final UserConfirmationService userConfirmationService = new UserConfirmationService();
     private final RegistrationService registrationService = new RegistrationService(compositeUserValidator, emailSender, userConfirmationService);
     private User user;

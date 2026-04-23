@@ -1,4 +1,6 @@
-package I.machines;
+package I.machine.models;
+
+import I.machine.actions.WashingActions;
 
 public class WashingMachine implements WashingActions {
 

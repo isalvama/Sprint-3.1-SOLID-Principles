@@ -1,4 +1,6 @@
-package I.machines;
+package I.machine.models;
+
+import I.machine.actions.AirActions;
 
 public class AirConditioner implements AirActions {
 

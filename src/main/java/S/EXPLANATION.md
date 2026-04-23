@@ -139,10 +139,10 @@ public interface CommunicationSender {
 }
 ```
 
-* **`EmailSender` class **: is a class that implements the `CommunicationSender` interface by establishing the logic of sending the confirmation mail to the user.
+* **`EmailSenderService` class **: is a class that implements the `CommunicationSender` interface by establishing the logic of sending the confirmation mail to the user.
 
 ```java
-public class EmailSender implements CommunicationSender {
+public class EmailSenderService implements CommunicationSender {
 
 
    public void sendCommunicationToUser(User user) {
